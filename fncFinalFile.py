@@ -19,6 +19,7 @@ from keras.layers import Dropout, Activation
 from keras import optimizers
 import scipy
 import numpy as np
+from sklearn import feature_extraction
 
 
 _wnl = nltk.WordNetLemmatizer()
