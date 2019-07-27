@@ -213,7 +213,7 @@ def append_ngrams(features, text_headline, text_body, size):
     features.append(grams_early_hits)
     return features
 
-# Define: 
+# Define: Get the occurances of a word
 def hand_features(headlines, bodies, dataset_type):
 
     def binary_co_occurence(headline, body):
@@ -564,6 +564,8 @@ if __name__ == '__main__':
         3: "unrelated"
     }
 
+
+    # Deep Neural Network
     X_train_sparse = sparse.csr_matrix(training_features)
     X_dev_sparse = sparse.csr_matrix(dev_features)
     X_test_sparse = sparse.csr_matrix(test_features)
