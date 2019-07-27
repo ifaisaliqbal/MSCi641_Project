@@ -1,3 +1,4 @@
+# Importing all the libraries
 from utils.dataset import DataSet
 from utils.generate_test_splits import split, comp_split
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -24,7 +25,8 @@ from sklearn import feature_extraction
 
 _wnl = nltk.WordNetLemmatizer()
 
-
+# Defining Functions for Pre-Processing
+###############################################################################################################################################
 def normalize_word(w):
     #lemmatize the words
     return _wnl.lemmatize(w).lower()
@@ -48,8 +50,12 @@ def gen_or_load_feats(feat_fn, headlines, bodies, dataset_type):
     #Calls the feature function with headlines and bodies
     feats = feat_fn(headlines, bodies, dataset_type)
     return feats
+###################################################################################################################################################
 
+# Defining Functions for Feature Creation
+###################################################################################################################################################
 
+# Define: This feature finds the refuting_words in sentences and create a sparse matrix for that
 def refuting_features(headlines, bodies, dataset_type):
     _refuting_words = [
         'fake',
@@ -77,9 +83,10 @@ def refuting_features(headlines, bodies, dataset_type):
     X_sparse = scipy.sparse.coo_matrix(numpy.array(X))
     return X_sparse
 
+# Define: bert feature vector of constant length from string with headline and body concatenated as given in bert documentation
 def bert_features(headlines, bodies, dataset_type):
 
-    #get bert feature vector of constant length from string with headline and body concatenated as given in bert documentation
+
     #bert service needs to be running to get the features
     data_combined = []
     bc = BertClient(check_length=False)
@@ -127,6 +134,7 @@ def bert_features(headlines, bodies, dataset_type):
     
     return bert_feat_sparse
 
+#Define: This function calculates polarity within sentences
 def polarity_features(headlines, bodies, dataset_type):
     _refuting_words = [
         'fake',
@@ -158,7 +166,7 @@ def polarity_features(headlines, bodies, dataset_type):
     X_sparse = scipy.sparse.coo_matrix(numpy.array(X))
     return X_sparse
 
-
+# Define: This function calculates the number of words in a sentence
 def ngrams(input, n):
     input = input.split(' ')
     output = []
@@ -166,14 +174,14 @@ def ngrams(input, n):
         output.append(input[i:i + n])
     return output
 
-
+# Define: This function calculates the number of characters in a word/sentence
 def chargrams(input, n):
     output = []
     for i in range(len(input) - n + 1):
         output.append(input[i:i + n])
     return output
 
-
+# Define: This function appends the characters as obtained from chargrams function
 def append_chargrams(features, text_headline, text_body, size):
     grams = [' '.join(x) for x in chargrams(" ".join(remove_stopwords(text_headline.split())), size)]
     grams_hits = 0
@@ -191,7 +199,7 @@ def append_chargrams(features, text_headline, text_body, size):
     features.append(grams_first_hits)
     return features
 
-
+# Define: This function appends the ngrams as obtained from ngrams function
 def append_ngrams(features, text_headline, text_body, size):
     grams = [' '.join(x) for x in ngrams(text_headline, size)]
     grams_hits = 0
@@ -205,7 +213,7 @@ def append_ngrams(features, text_headline, text_body, size):
     features.append(grams_early_hits)
     return features
 
-
+# Define: 
 def hand_features(headlines, bodies, dataset_type):
 
     def binary_co_occurence(headline, body):
