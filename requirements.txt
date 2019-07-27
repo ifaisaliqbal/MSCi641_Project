@@ -1,0 +1,7 @@
+- python 3.x
+- nltk
+- tqdm
+- langdetect
+- sklearn
+- scipy
+- plotly
